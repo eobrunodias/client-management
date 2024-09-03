@@ -5,6 +5,8 @@ import Button from "./Button";
 
 interface FormProps {
   cliente: Cliente;
+  clienteMudou?: (cliente: Cliente) => void;
+  cancelado?: () => void;
 }
 
 export default function Form(props: FormProps) {
@@ -33,10 +35,14 @@ export default function Form(props: FormProps) {
         className={`mb-5`}
       />
       <div className="flex justify-end mt-3">
-        <Button className="mr-2" cor="blue">
+        <Button
+          className="mr-2"
+          cor="blue"
+          onClick={() => props.clienteMudou?.(new Cliente(nome, +idade, id))}
+        >
           {id ? "Alterar" : "Salvar"}
         </Button>
-        <Button>Cancelar</Button>
+        <Button onClick={props.cancelado}>Cancelar</Button>
       </div>
     </div>
   );
