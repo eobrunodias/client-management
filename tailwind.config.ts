@@ -6,6 +6,10 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    { pattern: /from-(green|blue|gray)-(400|500|700)/ },
+    { pattern: /to-(green|blue|gray)-(400|500|700)/ },
+  ],
   theme: {
     extend: {
       backgroundImage: {

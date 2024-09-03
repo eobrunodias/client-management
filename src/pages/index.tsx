@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import Table from "@/components/Table";
 import Cliente from "@/core/Cliente";
@@ -26,6 +27,9 @@ export default function Home() {
       className={`flex h-screen justify-center items-center bg-gradient-to-r from-purple-500 to-blue-600 ${inter.className}`}
     >
       <Layout titulo="Cadastro Simples">
+        <div className="flex justify-end">
+          <Button className="mb-4">New client</Button>
+        </div>
         <Table
           clientes={clientes}
           clienteSelecionado={clienteSelecionado}
