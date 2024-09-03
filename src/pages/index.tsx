@@ -1,34 +1,49 @@
+import ColecaoCliente from "@/backend/db/ColecaoCliente";
 import Button from "@/components/Button";
 import Form from "@/components/Form";
 import Layout from "@/components/Layout";
 import Table from "@/components/Table";
 import Cliente from "@/core/Cliente";
+import ClienteRepositorio from "@/core/ClienteRepositorio";
 import { Inter } from "next/font/google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const clientes = [
-    new Cliente("Ana", 34, "1"),
-    new Cliente("Bia", 45, "2"),
-    new Cliente("Carlos", 23, "3"),
-    new Cliente("Pedro", 54, "4"),
-  ];
+  const repo: ClienteRepositorio = new ColecaoCliente();
 
-  function clienteSelecionado(cliente: Cliente) {
-    console.log(cliente.nome);
+  const [cliente, setCliente] = useState(Cliente.vazio());
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [visivel, setVisivel] = useState<"tabela" | "form">("tabela");
+
+  useEffect(obterTodos, []);
+
+  function obterTodos() {
+    repo.obterTodos().then((clientes) => {
+      setClientes(clientes);
+      setVisivel("tabela");
+    });
   }
 
-  function clienteExcluido(cliente: Cliente) {
+  async function novoCliente() {
+    setCliente(Cliente.vazio());
+    setVisivel("form");
+  }
+
+  async function clienteSelecionado(cliente: Cliente) {
+    setCliente(cliente);
+    setVisivel("form");
+  }
+
+  async function clienteExcluido(cliente: Cliente) {
     console.log(`Excluir... ${cliente.nome}`);
   }
 
-  function salvarCliente(cliente: Cliente) {
-    console.log(cliente);
+  async function salvarCliente(cliente: Cliente) {
+    repo.salvar(cliente);
+    setVisivel("tabela");
   }
-
-  const [visivel, setVisivel] = useState<"tabela" | "form">("tabela");
 
   return (
     <main
@@ -38,11 +53,7 @@ export default function Home() {
         {visivel === "tabela" ? (
           <>
             <div className="flex justify-end">
-              <Button
-                cor="green"
-                className="mb-4"
-                onClick={() => setVisivel("form")}
-              >
+              <Button cor="green" className="mb-4" onClick={novoCliente}>
                 New client
               </Button>
             </div>
@@ -54,7 +65,7 @@ export default function Home() {
           </>
         ) : (
           <Form
-            cliente={clientes[3]}
+            cliente={cliente}
             clienteMudou={salvarCliente}
             cancelado={() => setVisivel("tabela")}
           />
